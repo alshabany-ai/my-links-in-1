@@ -62,22 +62,26 @@ def bio_page(page_url):
     try:
         logger.info(f"🔍 Bio page requested: {page_url}")
         
-        # 1. جلب بيانات الصفحة
         bio = get_bio_page_by_page_url(page_url)
         if not bio:
             return "Page not found", 404
             
-        # 2. جلب معلومات المستخدم
         user_info = get_user_info(bio['user_id'])
         if not user_info:
             return "User not found", 404
             
-        # 3. زيادة عداد المشاهدات
         increment_bio_views(page_url)
         
-        # 4. معالجة الحسابات الاجتماعية
         accounts = bio.get('accounts', {})
         custom_links = bio.get('custom_links', [])
+        
+        # معالجة custom_links إذا كانت string
+        if isinstance(custom_links, str):
+            try:
+                import json
+                custom_links = json.loads(custom_links)
+            except:
+                custom_links = []
         
         platform_icons = {
             'youtube': 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg',
@@ -86,11 +90,8 @@ def bio_page(page_url):
             'facebook': 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg'
         }
         platform_names = {
-            'youtube': 'YouTube',
-            'instagram': 'Instagram',
-            'tiktok': 'TikTok',
-            'facebook': 'Facebook',
-            'snapchat': 'Snapchat'
+            'youtube': 'YouTube', 'instagram': 'Instagram', 'tiktok': 'TikTok',
+            'facebook': 'Facebook', 'snapchat': 'Snapchat'
         }
         
         accounts_list = []
@@ -100,7 +101,6 @@ def bio_page(page_url):
                 if not identifier.startswith('@'):
                     identifier = '@' + identifier
                 
-                # بناء الرابط حسب المنصة
                 if platform == 'youtube':
                     url = f"https://youtube.com/{identifier}"
                 elif platform == 'instagram':
@@ -129,8 +129,22 @@ def bio_page(page_url):
             for link in custom_links
         ]
         
-        # 5. عرض القالب
+        # 🆕 تجهيز أرقام الجوال (تصفية القيم الفارغة)
+        raw_phones = [
+            bio.get('phone_1'),
+            bio.get('phone_2'),
+            bio.get('phone_3'),
+            bio.get('phone_4')
+        ]
+        phones = [p for p in raw_phones if p and str(p).strip()]
+        
+        # 🆕 تجهيز الإيميل
+        email = bio.get('email', '')
+        if email:
+            email = str(email).strip()
+        
         theme_name = bio.get('theme_name', 'default')
+        
         return render_template(
             'bio_page.html',
             display_name=bio['display_name'],
@@ -143,7 +157,9 @@ def bio_page(page_url):
             theme_name=theme_name,
             user_id=bio['user_id'],
             is_premium=(user_info.get('status') == 'premium'),
-            RENDER_URL=RENDER_URL
+            RENDER_URL=RENDER_URL,
+            email=email,        # 🆕
+            phones=phones       # 🆕 (مصفاة من القيم الفارغة)
         )
         
     except Exception as e:
