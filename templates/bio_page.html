@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ display_name }} | صفحة البايو</title>
+    
+    <!-- الخطوط -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- تحميل CSS الأساسي أولاً -->
+    <link rel="preload" href="{{ url_for('static', filename='themes/' + theme_name + '.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='themes/' + theme_name + '.css') }}">
+    
+    <style>
+        /* ===== القواعد الأساسية (ثابتة لجميع القوالب) ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 35px 25px;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        /* ===== تحسينات الصورة الشخصية ===== */
+        .avatar-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+        
+        /* صورة احتياطية (في حال فشل تحميل الصورة) */
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .avatar-fallback span {
+            font-size: 56px;
+        }
+        
+        .avatar-container.loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(0.98); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(0.98); }
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .username {
+            font-size: 14px;
+            margin-bottom: 20px;
+            direction: ltr;
+        }
+        
+        .bio {
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            line-height: 1.7;
+            font-size: 14px;
+            text-align: center;
+            background: rgba(0,0,0,0.03);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+        
+        /* تحسين عرض النبذة عندما تكون فارغة */
+        .bio:empty {
+            display: none;
+        }
+        
+        .divider {
+            height: 1px;
+            margin: 25px 0;
+        }
+        
+        /* بطاقات الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            padding: 12px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            direction: ltr;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        /* ===== أزرار الحسابات بتصميم احترافي ===== */
+        .account-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 85%;
+            margin: 12px auto;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            color: white;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .account-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        .account-btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .account-btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+        }
+        
+        .account-btn i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* ألوان المنصات مع تحسين التدرجات */
+        .platform-youtube { 
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+        }
+        .platform-instagram { 
+            background: linear-gradient(135deg, #f77737 0%, #e1306c 50%, #833ab4 100%);
+            box-shadow: 0 4px 15px rgba(225,48,108,0.3);
+        }
+        .platform-tiktok { 
+            background: linear-gradient(135deg, #000000 0%, #161616 50%, #2d2d2d 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .platform-tiktok i { 
+            color: #25f4ee;
+        }
+        .platform-facebook { 
+            background: linear-gradient(135deg, #1877f2 0%, #0d65d4 100%);
+            box-shadow: 0 4px 15px rgba(24,119,242,0.3);
+        }
+        .platform-snapchat { 
+            background: linear-gradient(135deg, #fffc00 0%, #ffe600 100%);
+            color: #000000 !important;
+            text-shadow: none;
+        }
+        .platform-snapchat i {
+            color: #000000;
+        }
+        .platform-snapchat:hover {
+            filter: brightness(0.95);
+        }
+        .platform-twitter { 
+            background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+            box-shadow: 0 4px 15px rgba(29,161,242,0.3);
+        }
+        .platform-linkedin { 
+            background: linear-gradient(135deg, #0077b5 0%, #005e8c 100%);
+            box-shadow: 0 4px 15px rgba(0,119,181,0.3);
+        }
+        .platform-github { 
+            background: linear-gradient(135deg, #333333 0%, #242424 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .platform-telegram { 
+            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+            box-shadow: 0 4px 15px rgba(0,136,204,0.3);
+        }
+        .platform-whatsapp { 
+            background: linear-gradient(135deg, #25d366 0%, #128C7E 100%);
+            box-shadow: 0 4px 15px rgba(37,211,102,0.3);
+        }
+        
+        /* الروابط المخصصة */
+        .custom-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            font-size: 13px;
+        }
+        
+        .footer a {
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .views {
+            margin-top: 15px;
+            font-size: 11px;
+        }
+        
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .container { padding: 25px 15px; }
+            h1 { font-size: 24px; }
+            .account-btn { width: 95%; padding: 10px 15px; }
+            .avatar-container { width: 100px; height: 100px; }
+            .avatar-fallback { font-size: 36px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+    
+    <!-- شاشة التحميل -->
+    <style>
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .loading-subtext {
+            margin-top: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- شاشة التحميل -->
+    <div id="loading-screen">
+        <div style="text-align: center;">
+            <div class="loader"></div>
+            <div class="loading-text">جاري تحميل صفحة البايو...</div>
+            <div class="loading-subtext">يرجى الانتظار قليلاً</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- الصورة الشخصية مع تحسينات متعددة -->
+        <div class="avatar-container" id="avatarContainer">
+            <div id="avatarContent"></div>
+        </div>
+        
+        <!-- الاسم -->
+        <h1>{{ display_name }}</h1>
+        
+        <!-- اليوزرنيم -->
+        <div class="username">@{{ username }}</div>
+        
+        <!-- النبذة - مع تحسين العرض -->
+        <div id="bioContainer" class="bio">
+            {% if bio and bio.strip() %}
+                {{ bio | safe }}
+            {% endif %}
+        </div>
+        
+        <!-- أزرار الحسابات (مع دعم سناب شات وتحسين الأيقونات) -->
+        {% for account in accounts %}
+        <a href="{{ account.url }}" class="account-btn platform-{{ account.platform }}" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-{{ account.platform }}"></i>
+            <span>{{ account.name }}</span>
+        </a>
+        {% endfor %}
+        
+        <!-- الروابط المخصصة -->
+        {% for link in custom_links %}
+        <a href="{{ link.url }}" class="account-btn custom-link" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-link"></i>
+            <span>{{ link.title }}</span>
+        </a>
+        {% endfor %}
+        
+        <!-- تذييل الصفحة -->
+        <div class="footer">
+            لإنشاء صفحة بايو مثل هذه 
+            <a href="https://t.me/Social_Media_tools_bot" target="_blank">اضغط هنا وانتقل للبوت</a>
+        </div>
+        
+        {% if views_count %}
+        <div class="views">👁️ {{ views_count }} مشاهدة</div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // إخفاء شاشة التحميل بعد تحميل الصفحة بالكامل
+        window.addEventListener('load', function() {
+            var loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+            
+            // إصلاح مشكلة النبذة: التأكد من ظهورها بشكل صحيح
+            fixBioDisplay();
+        });
+        
+        // دالة لإصلاح عرض النبذة
+        function fixBioDisplay() {
+            const bioContainer = document.getElementById('bioContainer');
+            if (bioContainer) {
+                const bioText = bioContainer.innerHTML.trim();
+                // إذا كانت النبذة فارغة أو تحتوي فقط على مسافات، نخفي الحاوية
+                if (!bioText || bioText === '' || bioText === 'None') {
+                    bioContainer.style.display = 'none';
+                } else {
+                    bioContainer.style.display = 'block';
+                    // تنظيف النص من أي علامات HTML غير مرغوب فيها
+                    // مع الاحتفاظ بالتباعد الطبيعي
+                    bioContainer.innerHTML = bioText
+                        .replace(/\\n/g, '<br>')
+                        .replace(/\n/g, '<br>');
+                }
+            }
+        }
+        
+        // تحسين عرض الصورة الشخصية
+        (function() {
+            const avatarUrl = "{{ avatar_url | default('') }}";
+            const displayName = "{{ display_name | default('') }}";
+            const avatarContainer = document.getElementById('avatarContainer');
+            const avatarContent = document.getElementById('avatarContent');
+            
+            // دالة إنشاء صورة احتياطية (أفاتار بالاسم)
+            function createFallbackAvatar() {
+                const firstLetter = displayName ? displayName.charAt(0) : '?';
+                const colors = [
+                    '#667eea', '#48bb78', '#ed8936', '#e74c3c', '#3498db', 
+                    '#9b59b6', '#1abc9c', '#e67e22', '#2ecc71', '#f39c12'
+                ];
+                const colorIndex = displayName.length % colors.length;
+                const bgColor = colors[colorIndex];
+                
+                avatarContent.innerHTML = `
+                    <div class="avatar-fallback" style="background: linear-gradient(135deg, ${bgColor} 0%, ${bgColor}cc 100%);">
+                        <span>${firstLetter}</span>
+                    </div>
+                `;
+            }
+            
+            // التحقق من صحة رابط الصورة
+            function isValidUrl(url) {
+                if (!url || url.trim() === '') return false;
+                try {
+                    const urlObj = new URL(url);
+                    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
+                } catch(e) {
+                    return false;
+                }
+            }
+            
+            // إذا كان هناك رابط صورة صالح
+            if (isValidUrl(avatarUrl)) {
+                avatarContainer.classList.add('loading');
+                
+                const img = new Image();
+                img.className = 'avatar';
+                img.alt = displayName;
+                img.style.display = 'none';
+                img.crossOrigin = 'Anonymous'; // محاولة لتجنب مشاكل CORS
+                
+                img.onload = function() {
+                    avatarContainer.classList.remove('loading');
+                    img.style.display = 'block';
+                    avatarContent.innerHTML = '';
+                    avatarContent.appendChild(img);
+                    console.log('✅ تم تحميل الصورة بنجاح');
+                };
+                
+                img.onerror = function() {
+                    console.log('❌ فشل تحميل الصورة من:', avatarUrl);
+                    avatarContainer.classList.remove('loading');
+                    createFallbackAvatar();
+                };
+                
+                img.src = avatarUrl;
+                
+                // مهلة زمنية (إذا استغرق التحميل أكثر من 5 ثوان)
+                setTimeout(function() {
+                    if (avatarContainer.classList.contains('loading')) {
+                        console.log('⏰ انتهت مهلة تحميل الصورة');
+                        avatarContainer.classList.remove('loading');
+                        if (!avatarContent.querySelector('img')) {
+                            createFallbackAvatar();
+                        }
+                    }
+                }, 5000);
+            } else {
+                // لا يوجد رابط صورة صالح → استخدام الصورة الاحتياطية مباشرة
+                console.log('ℹ️ لا يوجد رابط صورة صالح، استخدام الصورة الاحتياطية');
+                createFallbackAvatar();
+            }
+        })();
+        
+        // إضافة تأثيرات إضافية للأزرار عند التحميل
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.account-btn');
+            buttons.forEach((btn, index) => {
+                btn.style.animation = `fadeInUp 0.3s ease-out ${index * 0.05}s forwards`;
+                btn.style.opacity = '0';
+                btn.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    btn.style.opacity = '1';
+                    btn.style.transform = 'translateY(0)';
+                }, index * 50);
+            });
+        });
+    </script>
+</body>
+</html>
