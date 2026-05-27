@@ -118,62 +118,31 @@
             display: none;
         }
         
-        /* ===== قسم التواصل (إيميل + جوال) ===== */
-        .contact-section {
+        /* ===== الفاصل بين أقسام الأزرار ===== */
+        .section-divider {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .contact-item {
-            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 13px;
+            gap: 15px;
+            margin: 25px 0 20px;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+        
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: currentColor;
+        }
+        
+        .section-title {
             font-weight: 500;
-            transition: all 0.3s ease;
-            border: 1.5px solid rgba(0,0,0,0.08);
-            background: rgba(0,0,0,0.02);
+            letter-spacing: 1px;
         }
         
-        .contact-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .contact-item.email-item {
-            color: #d44638;
-            border-color: #d4463830;
-        }
-        
-        .contact-item.email-item:hover {
-            background: #d4463810;
-        }
-        
-        .contact-item.phone-item {
-            color: #25d366;
-            border-color: #25d36630;
-        }
-        
-        .contact-item.phone-item:hover {
-            background: #25d36610;
-        }
-        
-        .contact-item i {
-            font-size: 16px;
-        }
-        
-        .contact-item .contact-value {
-            direction: ltr;
-        }
-        
-        /* ===== أزرار الحسابات بتصميم احترافي ===== */
-        .account-btn {
+        /* ===== أزرار الحسابات الاجتماعية بتصميم احترافي ===== */
+        .social-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -193,7 +162,65 @@
             overflow: hidden;
         }
         
-        .account-btn::before {
+        /* ===== أزرار التواصل (بريد + جوال) ===== */
+        .contact-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 85%;
+            margin: 12px auto;
+            padding: 12px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* زر البريد الإلكتروني */
+        .contact-btn.email {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #d44638;
+            border-color: #d44638;
+        }
+        
+        .contact-btn.email i {
+            color: #d44638;
+            font-size: 18px;
+        }
+        
+        .contact-btn.email:hover {
+            background: linear-gradient(135deg, #d4463810, #d4463820);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212, 70, 56, 0.3);
+        }
+        
+        /* زر رقم الجوال */
+        .contact-btn.phone {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #25d366;
+            border-color: #25d366;
+        }
+        
+        .contact-btn.phone i {
+            color: #25d366;
+            font-size: 18px;
+        }
+        
+        .contact-btn.phone:hover {
+            background: linear-gradient(135deg, #25d36610, #25d36620);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+        }
+        
+        /* تأثير hover المشترك لجميع الأزرار */
+        .social-btn::before,
+        .contact-btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -206,23 +233,25 @@
             transition: transform 0.3s ease;
         }
         
-        .account-btn:hover::before {
+        .social-btn:hover::before,
+        .contact-btn:hover::before {
             transform: scaleX(1);
             transform-origin: left;
         }
         
-        .account-btn:hover {
+        .social-btn:hover,
+        .contact-btn:hover {
             transform: translateY(-3px);
-            filter: brightness(1.05);
         }
         
-        .account-btn i {
+        .social-btn i,
+        .contact-btn i {
             font-size: 20px;
-            width: 24px;
+            width: 28px;
             text-align: center;
         }
         
-        /* ألوان المنصات */
+        /* ألوان المنصات الاجتماعية */
         .platform-youtube { 
             background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
             box-shadow: 0 4px 15px rgba(255,0,0,0.3);
@@ -254,24 +283,6 @@
             box-shadow: 0 4px 15px rgba(102,126,234,0.3);
         }
         
-        /* ===== قسم التواصل الاحتياطي (للأجهزة القديمة) ===== */
-        .contact-divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin: 25px 0 15px;
-            opacity: 0.6;
-            font-size: 12px;
-        }
-        
-        .contact-divider::before,
-        .contact-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: rgba(0,0,0,0.1);
-        }
-        
         .footer {
             margin-top: 30px;
             padding-top: 20px;
@@ -297,11 +308,10 @@
             body { padding: 15px; }
             .container { padding: 25px 15px; }
             h1 { font-size: 24px; }
-            .account-btn { width: 95%; padding: 10px 15px; }
+            .social-btn, .contact-btn { width: 95%; padding: 10px 15px; }
             .avatar-container { width: 100px; height: 100px; }
             .avatar-fallback { font-size: 36px; }
-            .contact-section { gap: 6px; }
-            .contact-item { padding: 6px 12px; font-size: 11px; }
+            .social-btn i, .contact-btn i { font-size: 18px; width: 24px; }
         }
         
         @keyframes fadeInUp {
@@ -311,6 +321,12 @@
         
         .container {
             animation: fadeInUp 0.6s ease-out;
+        }
+        
+        /* تنسيق القيم داخل الأزرار */
+        .contact-value {
+            direction: ltr;
+            font-weight: 500;
         }
     </style>
     
@@ -388,43 +404,55 @@
             {% endif %}
         </div>
         
-        <!-- ========== 🆕 قسم التواصل (إيميل + أرقام جوال) ========== -->
-        {% if email or phones %}
-        <div class="contact-divider">
-            <span>📞 معلومات التواصل</span>
+        <!-- ========== 📞 قسم أرقام الجوال (في الأعلى) ========== -->
+        {% if phones and phones|length > 0 %}
+        <div class="section-divider">
+            <span class="section-title"><i class="fas fa-phone-alt"></i> أرقام التواصل</span>
         </div>
-        <div class="contact-section">
-            {% if email %}
-            <a href="mailto:{{ email }}" class="contact-item email-item" target="_blank">
-                <i class="fas fa-envelope"></i>
-                <span class="contact-value">{{ email }}</span>
-            </a>
-            {% endif %}
-            
-            {% for phone in phones %}
-            <a href="tel:{{ phone }}" class="contact-item phone-item" target="_blank">
-                <i class="fas fa-phone-alt"></i>
-                <span class="contact-value">{{ phone }}</span>
-            </a>
-            {% endfor %}
-        </div>
+        {% for phone in phones %}
+        <a href="tel:{{ phone }}" class="contact-btn phone" target="_blank">
+            <i class="fas fa-phone-alt"></i>
+            <span class="contact-value">{{ phone }}</span>
+        </a>
+        {% endfor %}
         {% endif %}
         
-        <!-- أزرار الحسابات الاجتماعية -->
+        <!-- ========== ✉️ قسم البريد الإلكتروني ========== -->
+        {% if email %}
+        <div class="section-divider">
+            <span class="section-title"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
+        </div>
+        <a href="mailto:{{ email }}" class="contact-btn email" target="_blank">
+            <i class="fas fa-envelope"></i>
+            <span class="contact-value">{{ email }}</span>
+        </a>
+        {% endif %}
+        
+        <!-- ========== 🌐 قسم الحسابات الاجتماعية ========== -->
+        {% if accounts and accounts|length > 0 %}
+        <div class="section-divider">
+            <span class="section-title"><i class="fas fa-share-alt"></i> حساباتي الاجتماعية</span>
+        </div>
         {% for account in accounts %}
-        <a href="{{ account.url }}" class="account-btn platform-{{ account.platform }}" target="_blank" rel="noopener noreferrer">
+        <a href="{{ account.url }}" class="social-btn platform-{{ account.platform }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-{{ account.platform }}"></i>
             <span>{{ account.name }}</span>
         </a>
         {% endfor %}
+        {% endif %}
         
-        <!-- الروابط المخصصة -->
+        <!-- ========== 🔗 قسم الروابط المخصصة ========== -->
+        {% if custom_links and custom_links|length > 0 %}
+        <div class="section-divider">
+            <span class="section-title"><i class="fas fa-link"></i> روابط إضافية</span>
+        </div>
         {% for link in custom_links %}
-        <a href="{{ link.url }}" class="account-btn custom-link" target="_blank" rel="noopener noreferrer">
+        <a href="{{ link.url }}" class="social-btn custom-link" target="_blank" rel="noopener noreferrer">
             <i class="fas fa-link"></i>
             <span>{{ link.title }}</span>
         </a>
         {% endfor %}
+        {% endif %}
         
         <!-- تذييل الصفحة -->
         <div class="footer">
@@ -535,7 +563,7 @@
         
         // تأثيرات الأزرار
         document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.account-btn, .contact-item');
+            const buttons = document.querySelectorAll('.social-btn, .contact-btn');
             buttons.forEach((btn, index) => {
                 btn.style.animation = `fadeInUp 0.3s ease-out ${index * 0.05}s forwards`;
                 btn.style.opacity = '0';
