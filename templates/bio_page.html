@@ -141,6 +141,85 @@
             letter-spacing: 1px;
         }
         
+        /* ===== شبكة أرقام الجوال (جديدة) ===== */
+        .phones-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        /* تنسيق زر رقم الجوال في الشبكة */
+        .phone-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 8px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 2px solid #25d366;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            color: #25d366;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .phone-btn i {
+            color: #25d366;
+            font-size: 16px;
+        }
+        
+        .phone-btn .contact-value {
+            direction: ltr;
+            font-weight: 500;
+            font-size: 12px;
+        }
+        
+        /* تأثير hover لزر الجوال */
+        .phone-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #25d36620, #25d36610);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        .phone-btn:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
+        .phone-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            background: linear-gradient(135deg, #25d36610, #25d36620);
+        }
+        
+        /* تأثير النقر (اللمعان المتوهج) */
+        .phone-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+            transition: all 0.05s ease;
+        }
+        
+        /* حالة وجود رقم واحد فقط - يظهر في المنتصف */
+        .phones-grid:has(.phone-btn:only-child) {
+            grid-template-columns: 1fr;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
         /* ===== أزرار الحسابات الاجتماعية بتصميم احترافي ===== */
         .social-btn {
             display: flex;
@@ -162,8 +241,8 @@
             overflow: hidden;
         }
         
-        /* ===== أزرار التواصل (بريد + جوال) ===== */
-        .contact-btn {
+        /* ===== زر البريد الإلكتروني ===== */
+        .contact-btn.email {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -180,10 +259,6 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-        }
-        
-        /* زر البريد الإلكتروني */
-        .contact-btn.email {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             color: #d44638;
             border-color: #d44638;
@@ -194,33 +269,38 @@
             font-size: 18px;
         }
         
+        .contact-btn.email::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #d4463820, #d4463810);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+        
+        .contact-btn.email:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+        
         .contact-btn.email:hover {
-            background: linear-gradient(135deg, #d4463810, #d4463820);
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(212, 70, 56, 0.3);
+            background: linear-gradient(135deg, #d4463810, #d4463820);
         }
         
-        /* زر رقم الجوال */
-        .contact-btn.phone {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            color: #25d366;
-            border-color: #25d366;
-        }
-        
-        .contact-btn.phone i {
-            color: #25d366;
-            font-size: 18px;
-        }
-        
-        .contact-btn.phone:hover {
-            background: linear-gradient(135deg, #25d36610, #25d36620);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+        .contact-btn.email:active {
+            transform: translateY(0);
+            box-shadow: 0 0 15px rgba(212, 70, 56, 0.5);
+            transition: all 0.05s ease;
         }
         
         /* تأثير hover المشترك لجميع الأزرار */
-        .social-btn::before,
-        .contact-btn::before {
+        .social-btn::before {
             content: '';
             position: absolute;
             top: 0;
@@ -233,19 +313,23 @@
             transition: transform 0.3s ease;
         }
         
-        .social-btn:hover::before,
-        .contact-btn:hover::before {
+        .social-btn:hover::before {
             transform: scaleX(1);
             transform-origin: left;
         }
         
-        .social-btn:hover,
-        .contact-btn:hover {
+        .social-btn:hover {
             transform: translateY(-3px);
         }
         
+        .social-btn:active {
+            transform: translateY(0);
+            filter: brightness(0.95);
+            transition: all 0.05s ease;
+        }
+        
         .social-btn i,
-        .contact-btn i {
+        .contact-btn.email i {
             font-size: 20px;
             width: 28px;
             text-align: center;
@@ -308,10 +392,25 @@
             body { padding: 15px; }
             .container { padding: 25px 15px; }
             h1 { font-size: 24px; }
-            .social-btn, .contact-btn { width: 95%; padding: 10px 15px; }
+            .social-btn, .contact-btn.email { width: 95%; padding: 10px 15px; }
             .avatar-container { width: 100px; height: 100px; }
             .avatar-fallback { font-size: 36px; }
-            .social-btn i, .contact-btn i { font-size: 18px; width: 24px; }
+            .social-btn i, .contact-btn.email i { font-size: 18px; width: 24px; }
+            
+            /* تحسين شبكة الأرقام على الموبايل */
+            .phones-grid {
+                gap: 8px;
+            }
+            .phone-btn {
+                padding: 10px 6px;
+                font-size: 11px;
+            }
+            .phone-btn i {
+                font-size: 14px;
+            }
+            .phone-btn .contact-value {
+                font-size: 10px;
+            }
         }
         
         @keyframes fadeInUp {
@@ -404,17 +503,19 @@
             {% endif %}
         </div>
         
-        <!-- ========== 📞 قسم أرقام الجوال (في الأعلى) ========== -->
+        <!-- ========== 📞 قسم أرقام الجوال - تصميم شبكة (2 في الصف) ========== -->
         {% if phones and phones|length > 0 %}
         <div class="section-divider">
             <span class="section-title"><i class="fas fa-phone-alt"></i> أرقام التواصل</span>
         </div>
-        {% for phone in phones %}
-        <a href="tel:{{ phone }}" class="contact-btn phone" target="_blank">
-            <i class="fas fa-phone-alt"></i>
-            <span class="contact-value">{{ phone }}</span>
-        </a>
-        {% endfor %}
+        <div class="phones-grid">
+            {% for phone in phones %}
+            <a href="tel:{{ phone }}" class="phone-btn" target="_blank">
+                <i class="fas fa-phone-alt"></i>
+                <span class="contact-value">{{ phone }}</span>
+            </a>
+            {% endfor %}
+        </div>
         {% endif %}
         
         <!-- ========== ✉️ قسم البريد الإلكتروني ========== -->
@@ -563,7 +664,7 @@
         
         // تأثيرات الأزرار
         document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.social-btn, .contact-btn');
+            const buttons = document.querySelectorAll('.social-btn, .contact-btn.email, .phone-btn');
             buttons.forEach((btn, index) => {
                 btn.style.animation = `fadeInUp 0.3s ease-out ${index * 0.05}s forwards`;
                 btn.style.opacity = '0';
