@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <!-- ===== SEO & Open Graph (للمشاركة الاحترافية) ===== -->
 
-<!-- أيقونات الموقع (Favicon) -->
-<link rel="apple-touch-icon" sizes="180x180" href="/static/assets/icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/static/assets/icons/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/static/assets/icons/favicon-16x16.png">
-<link rel="manifest" href="/static/assets/icons/site.webmanifest">
+    <!-- أيقونات الموقع (Favicon) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="/static/assets/icons/site.webmanifest">
+    
+    <!-- عنوان الصفحة الأساسي (لشريط المتصفح ونتائج البحث) -->
+    <title>{{ display_name }} | صفحة البايو الخاصة بي</title>
+    <meta name="description" content="صفحة بايو {{ display_name }} - جميع حساباتي وروابط التواصل الاجتماعي في مكان واحد">
+    <meta name="author" content="{{ display_name }}">
+    <meta name="keywords" content="بايو, صفحة روابط, {{ display_name }}, سوشال ميديا">
+    <meta name="theme-color" content="#667eea">
 
-<!-- Open Graph (فيسبوك، تويتر، تليجرام، واتساب) -->
-<meta property="og:title" content="{{ display_name }} | صفحة البايو">
-<meta property="og:description" content="مرحباً! هذه صفحة بايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي">
-<meta property="og:image" content="{{ avatar_url if avatar_url else 'https://my-socials.onrender.com/static/assets/android-chrome-512x512.png' }}">
-<meta property="og:image:width" content="512">
-<meta property="og:image:height" content="512">
-<meta property="og:url" content="{{ request.url }}">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="صفحة بايو - {{ display_name }}">
-<!-- مخصص للمشاركة على وسائل التواصل الاجتماعي -->
-<meta property="og:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
-<!-- تويتر كارد -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ display_name }} | صفحة البايو">
-<meta name="twitter:description" content="مرحباً! هذه صفحة بايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي">
-<meta name="twitter:image" content="{{ avatar_url if avatar_url else 'https://my-socials.onrender.com/static/assets/android-chrome-512x512.png' }}">
+    <!-- Open Graph / فيسبوك، واتساب، تليجرام (OG هي الأساس) -->
+    <meta property="og:title" content="صفحة البايو | {{ display_name }}">
+    <meta property="og:description" content="مرحباً! هذه صفحة بايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي.">
+    <!-- أفضل صورة للمشاركة (حجمها 1200x630) -->
+    <meta property="og:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="صفحة البايو - Social Analyzer">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Social Analyzer | منشئ البايو الاحترافي">
 
-<!-- عنوان الصفحة للـ SEO -->
-<title>{{ display_name }} | صفحة البايو الخاصة بي</title>
-<meta name="description" content="صفحة بايو {{ display_name }} - جميع حساباتي وروابط التواصل الاجتماعي في مكان واحد">
-<meta name="author" content="{{ display_name }}">
-<meta name="keywords" content="بايو, صفحة روابط, {{ display_name }}, سوشال ميديا">
+    <!-- تويتر كارد (لتحسين المظهر في تويتر) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="صفحة البايو | {{ display_name }}">
+    <meta name="twitter:description" content="مرحباً! هذه صفحة بايو {{ display_name }}. تابعني على وسائل التواصل.">
+    <!-- نفس صورة OG (يُفضل استخدامها لتوحيد الصورة) -->
+    <meta name="twitter:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
+
     <!-- الخطوط -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
