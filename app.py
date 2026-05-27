@@ -14,7 +14,7 @@ import os
 import logging
 import sys
 from datetime import datetime
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 
 # إعدادات التسجيل
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 # إعدادات البيئة
 PORT = int(os.environ.get('PORT', 10000))
-RENDER_URL = os.environ.get('RENDER_URL', 'social-analyzer-flask-3.onrender.com')  # للسيرفر القديم (لتحميل الصور)
+RENDER_URL = os.environ.get('RENDER_URL', 'social-analyzer-flask-3.onrender.com')
 
 # إضافة مجلد utils للمسار
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -94,36 +94,36 @@ def bio_page(page_url):
         }
         
         accounts_list = []
-for platform, acc in accounts.items():
-    identifier = acc.get('account_identifier', '')
-    if identifier:
-        if not identifier.startswith('@'):
-            identifier = '@' + identifier
-        
-        # بناء الرابط حسب المنصة
-        if platform == 'youtube':
-            url = f"https://youtube.com/{identifier}"
-        elif platform == 'instagram':
-            clean = identifier.replace('@', '')
-            url = f"https://instagram.com/{clean}"
-        elif platform == 'tiktok':
-            clean = identifier.replace('@', '')
-            url = f"https://tiktok.com/@{clean}"
-        elif platform == 'facebook':
-            url = f"https://facebook.com/{identifier}"
-        elif platform == 'snapchat':
-            clean = identifier.replace('@', '')
-            url = f"https://snapchat.com/add/{clean}"
-        else:
-            url = f"https://{platform}.com/{identifier.replace('@', '')}"
-        
-        accounts_list.append({
-            'platform': platform,
-            'name': platform_names.get(platform, platform.capitalize()),
-            'url': url,
-            'icon': platform_icons.get(platform, '')
-        })
+        for platform, acc in accounts.items():
+            identifier = acc.get('account_identifier', '')
+            if identifier:
+                if not identifier.startswith('@'):
+                    identifier = '@' + identifier
                 
+                # بناء الرابط حسب المنصة
+                if platform == 'youtube':
+                    url = f"https://youtube.com/{identifier}"
+                elif platform == 'instagram':
+                    clean = identifier.replace('@', '')
+                    url = f"https://instagram.com/{clean}"
+                elif platform == 'tiktok':
+                    clean = identifier.replace('@', '')
+                    url = f"https://tiktok.com/@{clean}"
+                elif platform == 'facebook':
+                    url = f"https://facebook.com/{identifier}"
+                elif platform == 'snapchat':
+                    clean = identifier.replace('@', '')
+                    url = f"https://snapchat.com/add/{clean}"
+                else:
+                    url = f"https://{platform}.com/{identifier.replace('@', '')}"
+                
+                accounts_list.append({
+                    'platform': platform,
+                    'name': platform_names.get(platform, platform.capitalize()),
+                    'url': url,
+                    'icon': platform_icons.get(platform, '')
+                })
+        
         custom_links_list = [
             {'title': link.get('title', 'رابط مخصص'), 'url': link.get('url', '#')}
             for link in custom_links
@@ -155,12 +155,10 @@ for platform, acc in accounts.items():
 # =================================================================================
 @app.route('/static/<path:filename>')
 def serve_static(filename):
-    from flask import send_from_directory
     return send_from_directory('static', filename)
 
 @app.route('/static/themes/<path:filename>')
 def serve_theme(filename):
-    from flask import send_from_directory
     return send_from_directory('static/themes', filename)
 
 # =================================================================================
