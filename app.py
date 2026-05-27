@@ -94,18 +94,35 @@ def bio_page(page_url):
         }
         
         accounts_list = []
-        for platform, acc in accounts.items():
-            identifier = acc.get('account_identifier', '')
-            if identifier:
-                if identifier.startswith('@'):
-                    identifier = identifier[1:]
-                url = f"https://{platform}.com/{identifier}"
-                accounts_list.append({
-                    'platform': platform,
-                    'name': platform_names.get(platform, platform.capitalize()),
-                    'url': url,
-                    'icon': platform_icons.get(platform, '')
-                })
+for platform, acc in accounts.items():
+    identifier = acc.get('account_identifier', '')
+    if identifier:
+        if not identifier.startswith('@'):
+            identifier = '@' + identifier
+        
+        # بناء الرابط حسب المنصة
+        if platform == 'youtube':
+            url = f"https://youtube.com/{identifier}"
+        elif platform == 'instagram':
+            clean = identifier.replace('@', '')
+            url = f"https://instagram.com/{clean}"
+        elif platform == 'tiktok':
+            clean = identifier.replace('@', '')
+            url = f"https://tiktok.com/@{clean}"
+        elif platform == 'facebook':
+            url = f"https://facebook.com/{identifier}"
+        elif platform == 'snapchat':
+            clean = identifier.replace('@', '')
+            url = f"https://snapchat.com/add/{clean}"
+        else:
+            url = f"https://{platform}.com/{identifier.replace('@', '')}"
+        
+        accounts_list.append({
+            'platform': platform,
+            'name': platform_names.get(platform, platform.capitalize()),
+            'url': url,
+            'icon': platform_icons.get(platform, '')
+        })
                 
         custom_links_list = [
             {'title': link.get('title', 'رابط مخصص'), 'url': link.get('url', '#')}
