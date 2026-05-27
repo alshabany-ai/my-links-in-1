@@ -64,7 +64,6 @@
             transform: scale(1.05);
         }
         
-        /* صورة احتياطية (في حال فشل تحميل الصورة) */
         .avatar-fallback {
             width: 100%;
             height: 100%;
@@ -115,49 +114,62 @@
             white-space: pre-wrap;
         }
         
-        /* تحسين عرض النبذة عندما تكون فارغة */
         .bio:empty {
             display: none;
         }
         
-        .divider {
-            height: 1px;
-            margin: 25px 0;
-        }
-        
-        /* بطاقات الإحصائيات */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
+        /* ===== قسم التواصل (إيميل + جوال) ===== */
+        .contact-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
             margin: 20px 0;
         }
         
-        .stat-card {
-            padding: 12px;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s ease;
+        .contact-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1.5px solid rgba(0,0,0,0.08);
+            background: rgba(0,0,0,0.02);
         }
         
-        .stat-card:hover {
-            transform: translateY(-3px);
+        .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
-        .stat-icon {
-            font-size: 28px;
-            margin-bottom: 5px;
+        .contact-item.email-item {
+            color: #d44638;
+            border-color: #d4463830;
         }
         
-        .stat-value {
-            font-size: 20px;
-            font-weight: bold;
+        .contact-item.email-item:hover {
+            background: #d4463810;
+        }
+        
+        .contact-item.phone-item {
+            color: #25d366;
+            border-color: #25d36630;
+        }
+        
+        .contact-item.phone-item:hover {
+            background: #25d36610;
+        }
+        
+        .contact-item i {
+            font-size: 16px;
+        }
+        
+        .contact-item .contact-value {
             direction: ltr;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            margin-top: 5px;
         }
         
         /* ===== أزرار الحسابات بتصميم احترافي ===== */
@@ -210,7 +222,7 @@
             text-align: center;
         }
         
-        /* ألوان المنصات مع تحسين التدرجات */
+        /* ألوان المنصات */
         .platform-youtube { 
             background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
             box-shadow: 0 4px 15px rgba(255,0,0,0.3);
@@ -223,9 +235,7 @@
             background: linear-gradient(135deg, #000000 0%, #161616 50%, #2d2d2d 100%);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .platform-tiktok i { 
-            color: #25f4ee;
-        }
+        .platform-tiktok i { color: #25f4ee; }
         .platform-facebook { 
             background: linear-gradient(135deg, #1877f2 0%, #0d65d4 100%);
             box-shadow: 0 4px 15px rgba(24,119,242,0.3);
@@ -235,37 +245,31 @@
             color: #000000 !important;
             text-shadow: none;
         }
-        .platform-snapchat i {
-            color: #000000;
-        }
-        .platform-snapchat:hover {
-            filter: brightness(0.95);
-        }
-        .platform-twitter { 
-            background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
-            box-shadow: 0 4px 15px rgba(29,161,242,0.3);
-        }
-        .platform-linkedin { 
-            background: linear-gradient(135deg, #0077b5 0%, #005e8c 100%);
-            box-shadow: 0 4px 15px rgba(0,119,181,0.3);
-        }
-        .platform-github { 
-            background: linear-gradient(135deg, #333333 0%, #242424 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .platform-telegram { 
-            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
-            box-shadow: 0 4px 15px rgba(0,136,204,0.3);
-        }
-        .platform-whatsapp { 
-            background: linear-gradient(135deg, #25d366 0%, #128C7E 100%);
-            box-shadow: 0 4px 15px rgba(37,211,102,0.3);
-        }
+        .platform-snapchat i { color: #000000; }
+        .platform-snapchat:hover { filter: brightness(0.95); }
         
         /* الروابط المخصصة */
         .custom-link {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        
+        /* ===== قسم التواصل الاحتياطي (للأجهزة القديمة) ===== */
+        .contact-divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0 15px;
+            opacity: 0.6;
+            font-size: 12px;
+        }
+        
+        .contact-divider::before,
+        .contact-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0,0,0,0.1);
         }
         
         .footer {
@@ -296,7 +300,8 @@
             .account-btn { width: 95%; padding: 10px 15px; }
             .avatar-container { width: 100px; height: 100px; }
             .avatar-fallback { font-size: 36px; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .contact-section { gap: 6px; }
+            .contact-item { padding: 6px 12px; font-size: 11px; }
         }
         
         @keyframes fadeInUp {
@@ -365,7 +370,7 @@
     </div>
     
     <div class="container">
-        <!-- الصورة الشخصية مع تحسينات متعددة -->
+        <!-- الصورة الشخصية -->
         <div class="avatar-container" id="avatarContainer">
             <div id="avatarContent"></div>
         </div>
@@ -376,14 +381,36 @@
         <!-- اليوزرنيم -->
         <div class="username">@{{ username }}</div>
         
-        <!-- النبذة - مع تحسين العرض -->
+        <!-- النبذة -->
         <div id="bioContainer" class="bio">
             {% if bio and bio.strip() %}
                 {{ bio | safe }}
             {% endif %}
         </div>
         
-        <!-- أزرار الحسابات (مع دعم سناب شات وتحسين الأيقونات) -->
+        <!-- ========== 🆕 قسم التواصل (إيميل + أرقام جوال) ========== -->
+        {% if email or phones %}
+        <div class="contact-divider">
+            <span>📞 معلومات التواصل</span>
+        </div>
+        <div class="contact-section">
+            {% if email %}
+            <a href="mailto:{{ email }}" class="contact-item email-item" target="_blank">
+                <i class="fas fa-envelope"></i>
+                <span class="contact-value">{{ email }}</span>
+            </a>
+            {% endif %}
+            
+            {% for phone in phones %}
+            <a href="tel:{{ phone }}" class="contact-item phone-item" target="_blank">
+                <i class="fas fa-phone-alt"></i>
+                <span class="contact-value">{{ phone }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- أزرار الحسابات الاجتماعية -->
         {% for account in accounts %}
         <a href="{{ account.url }}" class="account-btn platform-{{ account.platform }}" target="_blank" rel="noopener noreferrer">
             <i class="fab fa-{{ account.platform }}"></i>
@@ -411,7 +438,7 @@
     </div>
     
     <script>
-        // إخفاء شاشة التحميل بعد تحميل الصفحة بالكامل
+        // إخفاء شاشة التحميل
         window.addEventListener('load', function() {
             var loadingScreen = document.getElementById('loading-screen');
             if (loadingScreen) {
@@ -420,23 +447,17 @@
                     loadingScreen.style.display = 'none';
                 }, 500);
             }
-            
-            // إصلاح مشكلة النبذة: التأكد من ظهورها بشكل صحيح
             fixBioDisplay();
         });
         
-        // دالة لإصلاح عرض النبذة
         function fixBioDisplay() {
             const bioContainer = document.getElementById('bioContainer');
             if (bioContainer) {
                 const bioText = bioContainer.innerHTML.trim();
-                // إذا كانت النبذة فارغة أو تحتوي فقط على مسافات، نخفي الحاوية
                 if (!bioText || bioText === '' || bioText === 'None') {
                     bioContainer.style.display = 'none';
                 } else {
                     bioContainer.style.display = 'block';
-                    // تنظيف النص من أي علامات HTML غير مرغوب فيها
-                    // مع الاحتفاظ بالتباعد الطبيعي
                     bioContainer.innerHTML = bioText
                         .replace(/\\n/g, '<br>')
                         .replace(/\n/g, '<br>');
@@ -451,7 +472,6 @@
             const avatarContainer = document.getElementById('avatarContainer');
             const avatarContent = document.getElementById('avatarContent');
             
-            // دالة إنشاء صورة احتياطية (أفاتار بالاسم)
             function createFallbackAvatar() {
                 const firstLetter = displayName ? displayName.charAt(0) : '?';
                 const colors = [
@@ -468,7 +488,6 @@
                 `;
             }
             
-            // التحقق من صحة رابط الصورة
             function isValidUrl(url) {
                 if (!url || url.trim() === '') return false;
                 try {
@@ -479,36 +498,30 @@
                 }
             }
             
-            // إذا كان هناك رابط صورة صالح
             if (isValidUrl(avatarUrl)) {
                 avatarContainer.classList.add('loading');
-                
                 const img = new Image();
                 img.className = 'avatar';
                 img.alt = displayName;
                 img.style.display = 'none';
-                img.crossOrigin = 'Anonymous'; // محاولة لتجنب مشاكل CORS
+                img.crossOrigin = 'Anonymous';
                 
                 img.onload = function() {
                     avatarContainer.classList.remove('loading');
                     img.style.display = 'block';
                     avatarContent.innerHTML = '';
                     avatarContent.appendChild(img);
-                    console.log('✅ تم تحميل الصورة بنجاح');
                 };
                 
                 img.onerror = function() {
-                    console.log('❌ فشل تحميل الصورة من:', avatarUrl);
                     avatarContainer.classList.remove('loading');
                     createFallbackAvatar();
                 };
                 
                 img.src = avatarUrl;
                 
-                // مهلة زمنية (إذا استغرق التحميل أكثر من 5 ثوان)
                 setTimeout(function() {
                     if (avatarContainer.classList.contains('loading')) {
-                        console.log('⏰ انتهت مهلة تحميل الصورة');
                         avatarContainer.classList.remove('loading');
                         if (!avatarContent.querySelector('img')) {
                             createFallbackAvatar();
@@ -516,15 +529,13 @@
                     }
                 }, 5000);
             } else {
-                // لا يوجد رابط صورة صالح → استخدام الصورة الاحتياطية مباشرة
-                console.log('ℹ️ لا يوجد رابط صورة صالح، استخدام الصورة الاحتياطية');
                 createFallbackAvatar();
             }
         })();
         
-        // إضافة تأثيرات إضافية للأزرار عند التحميل
+        // تأثيرات الأزرار
         document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('.account-btn');
+            const buttons = document.querySelectorAll('.account-btn, .contact-item');
             buttons.forEach((btn, index) => {
                 btn.style.animation = `fadeInUp 0.3s ease-out ${index * 0.05}s forwards`;
                 btn.style.opacity = '0';
