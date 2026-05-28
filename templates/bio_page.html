@@ -12,12 +12,14 @@
 <link rel="manifest" href="/static/assets/icons/site.webmanifest">
 
 <!-- Open Graph (فيسبوك، تويتر، تليجرام، واتساب) -->
+<meta property="og:title" content="{{ display_name }} | صفحة البايو">
 <meta property="og:description" content="مرحباً! هذه صفحة بايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي">
 <meta property="og:image" content="{{ avatar_url if avatar_url else 'https://my-socials.onrender.com/static/assets/android-chrome-512x512.png' }}">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
 <meta property="og:url" content="{{ request.url }}">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="صفحة بايو - {{ display_name }}">
 <!-- مخصص للمشاركة على وسائل التواصل الاجتماعي -->
 <meta property="og:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -25,11 +27,13 @@
 <meta name="twitter:image" content="https://my-socials.onrender.com/static/assets/icons/og-image.jpg">
 <!-- تويتر كارد -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:description" content="مرحباً! هذه صفحة البايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي">
+<meta name="twitter:title" content="{{ display_name }} | صفحة البايو">
+<meta name="twitter:description" content="مرحباً! هذه صفحة بايو {{ display_name }} - تابعني على وسائل التواصل الاجتماعي">
 <meta name="twitter:image" content="{{ avatar_url if avatar_url else 'https://my-socials.onrender.com/static/assets/android-chrome-512x512.png' }}">
 
 <!-- عنوان الصفحة للـ SEO -->
-<meta name="description" content="صفحة البايو {{ display_name }} - جميع حساباتي وروابط التواصل الاجتماعي في مكان واحد">
+<title>{{ display_name }} | صفحة البايو الخاصة بي</title>
+<meta name="description" content="صفحة بايو {{ display_name }} - جميع حساباتي وروابط التواصل الاجتماعي في مكان واحد">
 <meta name="author" content="{{ display_name }}">
 <meta name="keywords" content="بايو, صفحة روابط, {{ display_name }}, سوشال ميديا">
     <!-- الخطوط -->
