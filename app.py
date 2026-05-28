@@ -42,8 +42,6 @@ for key, value in os.environ.items():
 ALWAYS_ALLOWED = [
     'https://api.telegram.org',
     'https://t.me',
-    'http://localhost:5000',
-    'http://127.0.0.1:5000',
 ]
 
 ALLOWED_BOTS.extend(ALWAYS_ALLOWED)
@@ -191,8 +189,111 @@ def api_get_bio(page_id):
 # =================================================================================
 @app.route('/bio/<page_url>')
 def bio_page(page_url):
-    # ... (نفس الكود السابق مع إضافة email و phones)
-    # ... (سأضيفه كاملاً لو تحتاج)
+    try:
+        logger.info(f"🔍 Bio page requested: {page_url}")
+        
+        bio = get_bio_page_by_page_url(page_url)
+        if not bio:
+            return "Page not found", 404
+            
+        user_info = get_user_info(bio['user_id'])
+        if not user_info:
+            return "User not found", 404
+            
+        increment_bio_views(page_url)
+        
+        accounts = bio.get('accounts', {})
+        custom_links = bio.get('custom_links', [])
+        
+        # معالجة custom_links إذا كانت string
+        if isinstance(custom_links, str):
+            try:
+                custom_links = json.loads(custom_links)
+            except:
+                custom_links = []
+        
+        platform_icons = {
+            'youtube': 'https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg',
+            'instagram': 'https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png',
+            'tiktok': 'https://upload.wikimedia.org/wikipedia/commons/0/0a/TikTok_logo.svg',
+            'facebook': 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg'
+        }
+        platform_names = {
+            'youtube': 'YouTube', 'instagram': 'Instagram', 'tiktok': 'TikTok',
+            'facebook': 'Facebook', 'snapchat': 'Snapchat'
+        }
+        
+        accounts_list = []
+        for platform, acc in accounts.items():
+            identifier = acc.get('account_identifier', '')
+            if identifier:
+                if not identifier.startswith('@'):
+                    identifier = '@' + identifier
+                
+                if platform == 'youtube':
+                    url = f"https://youtube.com/{identifier}"
+                elif platform == 'instagram':
+                    clean = identifier.replace('@', '')
+                    url = f"https://instagram.com/{clean}"
+                elif platform == 'tiktok':
+                    clean = identifier.replace('@', '')
+                    url = f"https://tiktok.com/@{clean}"
+                elif platform == 'facebook':
+                    url = f"https://facebook.com/{identifier}"
+                elif platform == 'snapchat':
+                    clean = identifier.replace('@', '')
+                    url = f"https://snapchat.com/add/{clean}"
+                else:
+                    url = f"https://{platform}.com/{identifier.replace('@', '')}"
+                
+                accounts_list.append({
+                    'platform': platform,
+                    'name': platform_names.get(platform, platform.capitalize()),
+                    'url': url,
+                    'icon': platform_icons.get(platform, '')
+                })
+        
+        custom_links_list = [
+            {'title': link.get('title', 'رابط مخصص'), 'url': link.get('url', '#')}
+            for link in custom_links
+        ]
+        
+        # تجهيز أرقام الجوال (تصفية القيم الفارغة)
+        raw_phones = [
+            bio.get('phone_1'),
+            bio.get('phone_2'),
+            bio.get('phone_3'),
+            bio.get('phone_4')
+        ]
+        phones = [p for p in raw_phones if p and str(p).strip()]
+        
+        # تجهيز الإيميل
+        email = bio.get('email', '')
+        if email:
+            email = str(email).strip()
+        
+        theme_name = bio.get('theme_name', 'default')
+        
+        return render_template(
+            'bio_page.html',
+            display_name=bio['display_name'],
+            username=user_info.get('username', ''),
+            bio=bio.get('bio', ''),
+            accounts=accounts_list,
+            custom_links=custom_links_list,
+            avatar_url=bio.get('avatar_url', None),
+            views_count=bio.get('views_count', 0),
+            theme_name=theme_name,
+            user_id=bio['user_id'],
+            is_premium=(user_info.get('status') == 'premium'),
+            RENDER_URL=RENDER_URL,
+            email=email,
+            phones=phones
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in bio_page: {e}")
+        return f"Internal error: {e}", 500
 
 # =================================================================================
 # الملفات الثابتة والتشغيل
