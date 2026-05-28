@@ -13,7 +13,7 @@ import json
 from datetime import datetime
 from functools import wraps
 from flask import Flask, render_template, jsonify, send_from_directory, request
-
+from flask import Flask, render_template, jsonify, send_from_directory, request, make_response, redirect
 # إعدادات التسجيل
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -189,8 +189,17 @@ def api_get_bio(page_id):
 # =================================================================================
 @app.route('/bio/<page_url>/loading')
 def bio_loading(page_url):
-    """صفحة تحميل مؤقتة ثم التوجيه إلى صفحة البايو الحقيقية"""
-    return f'''
+    """صفحة تحميل مؤقتة - تظهر فقط في أول زيارة"""
+    
+    # التحقق من وجود كوكي يفيد بأنه تمت الزيارة سابقاً
+    visited = request.cookies.get(f'bio_visited_{page_url}')
+    
+    if visited:
+        # إذا سبق وزارها، انتقل مباشرة
+        return redirect(f'/bio/{page_url}')
+    
+    # أول زيارة - اعرض صفحة التحميل
+    response = make_response(render_template_string(f'''
     <!DOCTYPE html>
     <html lang="ar" dir="rtl">
     <head>
@@ -199,109 +208,65 @@ def bio_loading(page_url):
         <title>جاري تحميل صفحة البايو...</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-            * {{
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }}
+            * {{ margin: 0; padding: 0; box-sizing: border-box; }}
             body {{
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 min-height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Tajawal', 'Segoe UI', sans-serif;
                 direction: rtl;
             }}
-            .loading-container {{
-                text-align: center;
-                padding: 20px;
-            }}
+            .loading-container {{ text-align: center; padding: 20px; }}
             .logo {{
-                width: 80px;
-                height: 80px;
-                background: white;
-                border-radius: 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 auto 30px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                width: 80px; height: 80px; background: white; border-radius: 20px;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             }}
-            .logo span {{
-                font-size: 48px;
-            }}
+            .logo span {{ font-size: 48px; }}
             .spinner {{
-                width: 50px;
-                height: 50px;
+                width: 50px; height: 50px;
                 border: 4px solid rgba(255,255,255,0.3);
                 border-top: 4px solid white;
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
                 margin: 0 auto 20px;
             }}
-            @keyframes spin {{
-                0% {{ transform: rotate(0deg); }}
-                100% {{ transform: rotate(360deg); }}
-            }}
-            h2 {{
-                color: white;
-                font-size: 24px;
-                margin-bottom: 10px;
-            }}
-            p {{
-                color: rgba(255,255,255,0.9);
-                font-size: 14px;
-            }}
+            @keyframes spin {{ 0% {{ transform: rotate(0deg); }} 100% {{ transform: rotate(360deg); }} }}
+            h2 {{ color: white; font-size: 24px; margin-bottom: 10px; }}
+            p {{ color: rgba(255,255,255,0.9); font-size: 14px; }}
             .progress-bar {{
-                width: 200px;
-                height: 4px;
-                background: rgba(255,255,255,0.3);
-                border-radius: 10px;
-                margin: 20px auto 0;
-                overflow: hidden;
+                width: 200px; height: 4px; background: rgba(255,255,255,0.3);
+                border-radius: 10px; margin: 20px auto 0; overflow: hidden;
             }}
             .progress {{
-                width: 0%;
-                height: 100%;
-                background: white;
-                border-radius: 10px;
+                width: 0%; height: 100%; background: white; border-radius: 10px;
                 animation: progress 2s ease-out forwards;
             }}
-            @keyframes progress {{
-                0% {{ width: 0%; }}
-                100% {{ width: 100%; }}
-            }}
-            .redirect-note {{
-                font-size: 11px;
-                margin-top: 20px;
-                opacity: 0.6;
-                color: white;
-            }}
+            @keyframes progress {{ 0% {{ width: 0%; }} 100% {{ width: 100%; }} }}
+            .redirect-note {{ font-size: 11px; margin-top: 20px; opacity: 0.6; color: white; }}
         </style>
     </head>
     <body>
         <div class="loading-container">
-            <div class="logo">
-                <span>📱</span>
-            </div>
+            <div class="logo"><span>📱</span></div>
             <div class="spinner"></div>
             <h2>جاري تحميل صفحة البايو</h2>
-            <p>يرجى الانتظار قليلاً...</p>
-            <div class="progress-bar">
-                <div class="progress"></div>
-            </div>
+            <p>هذه زيارتك الأولى، يرجى الانتظار قليلاً...</p>
+            <div class="progress-bar"><div class="progress"></div></div>
             <p class="redirect-note">سيتم التوجيه تلقائياً خلال ثواني</p>
         </div>
         <script>
-            // حل بديل في حال لم يعمل التوجيه التلقائي
-            setTimeout(function() {{
-                window.location.href = '/bio/{page_url}';
-            }}, 3000);
+            setTimeout(function() {{ window.location.href = '/bio/{page_url}'; }}, 3000);
         </script>
     </body>
     </html>
-    '''
+    '''))
+    
+    # تعيين كوكي لمدة سنة (تذكر الزيارة)
+    response.set_cookie(f'bio_visited_{page_url}', 'true', max_age=31536000, httponly=True, samesite='Lax')
+    return response
 # =================================================================================
 # مسار صفحة البايو (بدون حماية للمستخدمين)
 # =================================================================================
